@@ -44,12 +44,32 @@ function initMediaSession() {
   });
 }
 
-function space(element) { // Space
-  let evt = new KeyboardEvent("keydown", {
-    key: " ",
-    keyCode: 32
-  });
-  document.dispatchEvent(evt);
+function space(element) { // Simulate quick Space tap (keydown + keyup)
+  try {
+    const d = element || document;
+    const target = (d.querySelector('.html5-video-player') || d.querySelector('video') || d.body || d);
+    const evInit = {
+      key: ' ',
+      code: 'Space',
+      keyCode: 32,
+      which: 32,
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      location: 0,
+      repeat: false,
+      ctrlKey: false,
+      shiftKey: false,
+      altKey: false,
+      metaKey: false
+    };
+    target.dispatchEvent(new KeyboardEvent('keydown', evInit));
+    console.log('space')
+    // Release quickly so YouTube doesn't interpret as a hold
+    setTimeout(() => {
+      target.dispatchEvent(new KeyboardEvent('keyup', evInit));
+    }, 10);
+  } catch (_) {}
 }
 
 function forward(element) { // ArrowRight
